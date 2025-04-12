@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GAMESITE</title>
+  <style>
+   body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+ 
+}
+
+video.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  min-height: 100vh;
+  text-align: center;
+}
+
+
+    h1, h2 {
+      color: #00e0ff;
+    }
+
+    .menu, .level-select, .settings, .level-display {
+      margin-bottom: 40px;
+    }
+
+    button {
+      background-color: #00e0ff;
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      margin: 10px;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #009bb3;
+    }
+
+    .level-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Added space between buttons */
+  }
+
+  .level-button {
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    background-color: #222;
+    border: 2px solid #00e0ff;
+    border-radius: 12px; /* Rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00e0ff;
+    font-weight: bold;
+    font-size: 22px; /* Increased font size */
+    cursor: pointer;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+  }
+
+  .level-button:hover {
+    background-color: #009bb3;
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+  }
+
+  .level-button:active {
+    transform: scale(1); /* Return to original size when clicked */
+    background-color: #007a92;
+  }
+
+    .settings {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .setting-option {
+      margin: 15px 0;
+    }
+
+    .level-display {
+      display: none;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .level-display h2 {
+      text-align: center;
+    }
+
+    .level-display input, 
+    .level-display select, 
+    .level-display textarea {
+      width: 100%;
+      max-width: 400px;
+      padding: 8px;
+      margin: 5px 0 15px;
+      border-radius: 4px;
+      border: none;
+    }
+
+    #menu a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+
+    #menu a:hover {
+      color: yellow;
+    }
+
+    
+  </style>
+</head>
+<body>
+
+    <video class="bg-video" autoplay loop muted playsinline>
+        <source src="vid3.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+  <div class="container">
+    <h1>GAMESITE</h1>
+
+   
+    <div class="menu" id="menu-buttons">
+        <button onclick="showLevels()">Play</button>
+        <button onclick="showSettings()">Settings</button>
+      </div>
+   
+    <div class="level-select" id="level-select" style="display: none;">
+      <h2>Select Level</h2>
+      <div class="level-buttons">
+        
+        <div class="level-button" onclick="showLevel(1)">1</div>
+        <div class="level-button" onclick="showLevel(2)">2</div>
+        <div class="level-button" onclick="showLevel(3)">3</div>
+        <div class="level-button" onclick="showLevel(4)">4</div>
+        <div class="level-button" onclick="showLevel(5)">5</div>
+        <div class="level-button" onclick="showLevel(6)">6</div>
+        <div class="level-button" onclick="showLevel(7)">7</div>
+        <div class="level-button" onclick="showLevel(8)">8</div>
+        <div class="level-button" onclick="showLevel(9)">9</div>
+        <div class="level-button" onclick="showLevel(10)">10</div>
+      </div>
+    </div>
+
+   
+    <div class="settings" id="settings" style="display: none;">
+      <h2>Settings</h2>
+      <div class="setting-option">
+        <label>SOUND</label>
+        <input type="checkbox">
+      </div>
+      <div class="setting-option">
+        <label>MUSIC</label>
+        <input type="checkbox">
+      </div>
+      <div class="setting-option">
+        <label>DARK MODE</label>
+        <input type="checkbox">
+      </div>
+      <div class="setting-option">
+        <label>HOW TO PLAY</label>
+        <button>View</button>
+      </div>
+      <div class="setting-option">
+        <label>RESTORE</label>
+        <button>Reset</button>
+      </div>
+    </div>
+
+    
+    <div class="level-display" id="level-display">
+      <h2 id="level-title">Level X</h2>
+      <div id="level-content"></div>
+      <br>
+      <button onclick="goBack()">Back</button>
+    </div>
+  </div>
+
+  <script>
+   function showLevels() {
+  document.getElementById('menu-buttons').style.display = 'none';
+  document.getElementById('level-select').style.display = 'block';
+  document.getElementById('settings').style.display = 'none';
+  document.getElementById('level-display').style.display = 'none';
+}
+
+    function showSettings() {
+      document.getElementById('settings').style.display = 'block';
+      document.getElementById('level-select').style.display = 'none';
+      document.getElementById('level-display').style.display = 'none';
+    }
+
+    function showLevel(level) {
+      document.getElementById('level-select').style.display = 'none';
+      document.getElementById('settings').style.display = 'none';
+      document.getElementById('level-display').style.display = 'block';
+      document.getElementById('level-title').innerText = 'Level ' + level;
+
+      const levelContent = {
+        1: `<p><!DOCTYPE html>
+<html>
+<head>
+    <title>Poem About Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 30px;
+            color: #333;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p {
+            background-color: #ffffff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            line-height: 1.6;
+        }
+
+        .centered {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background-color: #3498db;
+            margin: 30px 0;
+            width: 60%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Code Is Poetry</h1>
+    <h2>The Art Behind the Logic</h2>
+    <h3>By a Silent Keyboard</h3>
+
+    <p>
+        Each line we write, a world begins,<br>
+        With loops and branches, forks and spins.<br>
+        In silent clicks and thoughtful pace,<br>
+        We build a form, we give it grace.
+    </p>
+
+    <hr>
+
+    <div class="centered">
+        <p>
+            If code is art, then were the brush,<br>
+            Painting with logic, never in a rush.<br>
+            From “hello world” to grand design,<br>
+            Each bug we fix, a victory sign.
+        </p>
+    </div>
+
+    <p>
+        So heres to scripts both short and long,<br>
+        To every error that makes us strong.<br>
+        For in the dark, our screens still glow—<br>
+        With dreams in code, we make it so.
+    </p>
+
+</body>
+</html></p>`,
+        2: `<p><!DOCTYPE html>
+<html>
+<head>
+    <title>All-in-One HTML with Jokes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 30px;
+            color: #333;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.75em; }
+        h3 { font-size: 1.5em; }
+        h4 { font-size: 1.3em; }
+        h5 { font-size: 1.1em; }
+        h6 { font-size: 1em; }
+
+        p {
+            background-color: #ffffff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            line-height: 1.6;
+        }
+
+        .centered {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background-color: #3498db;
+            margin: 30px 0;
+            width: 60%;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Headings with humor -->
+    <h1>Welcome, Brave Developer!</h1>
+    <h2>Step 1: Panic</h2>
+    <h3>Step 2: Google Everything</h3>
+    <h4>Step 3: StackOverflow Knows Best</h4>
+    <h5>Step 4: Copy. Paste. Pray.</h5>
+    <h6>Step 5: "Why isn't it working?!"</h6>
+
+    <!-- Funny paragraphs -->
+    <p>HTML is like the bread in a sandwich—without it, everything else falls apart. Except no one eats HTML.</p>
+    <p>CSS makes things pretty... unless you accidentally center everything and can't uncenter your soul.</p>
+    <p>JavaScript brings it all to life—just like Dr. Frankenstein. And just as chaotic.</p>
+
+    <!-- Line break section with a joke -->
+    <p>
+        Dear Dev,<br>
+        You forgot a semicolon again.<br>
+        The compiler sends its regards.<br>
+        Your IDE
+    </p>
+
+    <!-- Centered content with humor -->
+    <div class="centered">
+        <p>“To center a div is to face your fears.”  Ancient Web Proverb</p>
+    </div>
+
+    <!-- Horizontal line with content above and below -->
+    <p>Before the bug fix: "This should work, I swear."</p>
+    <hr>
+    <p>After the bug fix: "I have no idea why it works, but Im not touching it again."</p>
+
+</body>
+</html></p>`,
+        3: `<p><!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Nonbreaking Spaces Example</title> 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 30px;
+            color: #333;
+        }
+
+        p {
+            background-color: #fff;
+            padding: 15px;
+            border-left: 4px solid #9b59b6;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            width: fit-content;
+        }
+    </style>
+</head> 
+<body> 
+    <p>An example of this technique appears in the movie "12&nbsp;Angry&nbsp;Men."</p> 
+</body>
+</html>
+
+<br>
+
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Align Attribute Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 30px;
+            color: #333;
+        }
+
+        p {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        p[align="left"] {
+            text-align: left;
+            border-left: 4px solid #3498db;
+        }
+
+        p[align="center"] {
+            text-align: center;
+            border-left: 4px solid #9b59b6;
+        }
+
+        p[align="right"] {
+            text-align: right;
+            border-left: 4px solid #f39c12;
+        }
+    </style>
+</head> 
+<body> 
+    <p align="left">This is left aligned</p> 
+    <p align="center">This is center aligned</p> 
+    <p align="right">This is right aligned</p> 
+</body> 
+</html>
+
+<br>
+
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Text Format Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 30px;
+            color: #333;
+        }
+
+        p {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        p i {
+            font-style: italic;
+            color: #3498db;
+        }
+
+        p u {
+            text-decoration: underline;
+            color: #9b59b6;
+        }
+
+        p b {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        p strike {
+            text-decoration: line-through;
+            color: #f39c12;
+        }
+
+        p sup {
+            vertical-align: super;
+            font-size: smaller;
+            color: #2ecc71;
+        }
+
+        p sub {
+            vertical-align: sub;
+            font-size: smaller;
+            color: #34495e;
+        }
+
+        p big {
+            font-size: larger;
+            color: #8e44ad;
+        }
+
+        p small {
+            font-size: smaller;
+            color: #95a5a6;
+        }
+    </style>
+</head> 
+<body> 
+    <p>The following word uses an <i>adventurous</i> typeface.</p> 
+    <p>The following word uses an <u>creative</u> typeface.</p> 
+    <p>The following word uses a <b>dynamic</b> typeface.</p> 
+    <p>The following word uses a <strike>discontinued</strike> typeface.</p> 
+    <p>The following word uses a <sup>vibrant</sup> typeface.</p> 
+    <p>The following word uses a <sub>unique</sub> typeface.</p> 
+    <p>The following word uses a <big>magnificent</big> typeface.</p> 
+    <p>The following word uses a <small>simple</small> typeface.</p>
+</body> 
+</html>
+
+<br>
+
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Text Format Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 30px;
+            color: #333;
+        }
+
+        p {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        p i {
+            font-style: italic;
+            color: #3498db;
+        }
+
+        p u {
+            text-decoration: underline;
+            color: #9b59b6;
+        }
+
+        p b {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        p strike {
+            text-decoration: line-through;
+            color: #f39c12;
+        }
+
+        p sup {
+            vertical-align: super;
+            font-size: smaller;
+            color: #2ecc71;
+        }
+
+        p sub {
+            vertical-align: sub;
+            font-size: smaller;
+            color: #34495e;
+        }
+
+        p big {
+            font-size: larger;
+            color: #8e44ad;
+        }
+
+        p small {
+            font-size: smaller;
+            color: #95a5a6;
+        }
+    </style>
+</head> 
+<body> 
+    <p>The following word uses an <i>adventurous</i> typeface.</p> 
+    <p>The following word uses an <u>creative</u> typeface.</p> 
+    <p>The following word uses a <b>dynamic</b> typeface.</p> 
+    <p>The following word uses a <strike>discontinued</strike> typeface.</p> 
+    <p>The following word uses a <sup>vibrant</sup> typeface.</p> 
+    <p>The following word uses a <sub>unique</sub> typeface.</p> 
+    <p>The following word uses a <big>magnificent</big> typeface.</p> 
+    <p>The following word uses a <small>simple</small> typeface.</p>
+</body> 
+</html>
+
+<br>
+
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Hyperlink Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 30px;
+            color: #333;
+        }
+
+        p {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        a:hover {
+            background-color: #f39c12;
+            color: white;
+        }
+    </style>
+</head> 
+<body> 
+    <p> A Link Opening a Website</p>
+    <p>Click the following link:</p>
+    <a href="https://pixarcars.fandom.com/wiki/Main_Page" target="_blank">cars is mine</a>
+
+    <p> A Link Opening a Webpage</p>
+    <p>Click the following link:</p>
+    <a href="https://pixarcars.fandom.com/wiki/Main_Page">also this is mine</a>
+</body> 
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Setting Font Size</title>
+      <style>
+         body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            padding: 30px;
+            color: #333;
+         }
+
+         p {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 15px;
+         }
+
+         font {
+            display: block;
+            margin: 5px 0;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+         }
+      </style>
+   </head>
+   <body>
+      <p><font size="1">This is a very small text</font></p>
+      <p><font size="2">Slightly bigger text</font></p>
+      <p><font size="3">Moderate text size</font></p>
+      <p><font size="4">A bit larger text</font></p>
+      <p><font size="5">Quite large text</font></p>
+      <p><font size="6">Very large text</font></p>
+      <p><font size="7">The largest text</font></p>
+   </body>
+</html></p>`,
+        4: `<p><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shortened HTML Styles</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      color: #0000FF;
+      background-color: #FDD;
+    }
+    font {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+    p {
+      font-size: 1.2em;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Font Face Examples -->
+  <font face="Times New Roman" size="5">Times New Roman elegance</font>
+  <font face="Verdana" size="5">Verdana readability</font>
+  <font face="Comic Sans MS" size="5">Comic Sans MS playfulness</font>
+
+  <!-- Named Color Example -->
+  <p style="color: blue;">This text is blue on a pink background.</p>
+
+  <!-- Hex Color Example -->
+  <div style="background-color: #00FF00; color: #0000FF; padding: 10px;">
+    Hex color: blue text on green background.
+  </div>
+
+</body>
+</html>
+</p>`,
+        5: `<p><!DOCTYPE html>
+<html>
+   <head>
+      <title>HTML Table Header</title>
+   </head>
+   <body>
+      <table border="1">
+         <tr>
+            <th>Employee Name</th>
+            <th>Monthly Salary</th>
+         </tr>
+         <tr>
+            <td>Ramesh Kumar</td>
+            <td>5000</td>
+         </tr>
+         <tr>
+            <td>Shabbir Ahmed</td>
+            <td>7000</td>
+         </tr>
+      </table>
+   </body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>HTML Table Cellpadding</title>
+   </head>
+   <body>
+      <table border="1" cellpadding="5" cellspacing="5">
+         <tr>
+            <th>Employee Name</th>
+            <th>Monthly Salary</th>
+         </tr>
+         <tr>
+            <td>Ramesh Kumar</td>
+            <td>5000</td>
+         </tr>
+         <tr>
+            <td>Shabbir Ahmed</td>
+            <td>7000</td>
+         </tr>
+      </table>
+   </body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>HTML Table Colspan/Rowspan</title>
+   </head>
+   <body>
+      <table border="1">
+         <tr>
+            <th>Column 1</th>
+            <th>Column 2</th>
+            <th>Column 3</th>
+         </tr>
+         <tr>
+            <td rowspan="2">Row 1 Cell 1</td>
+            <td>Row 1 Cell 2</td>
+            <td>Row 1 Cell 3</td>
+         </tr>
+         <tr>
+            <td>Row 2 Cell 2</td>
+            <td>Row 2 Cell 3</td>
+         </tr>
+         <tr>
+            <td colspan="3">Row 3 Cell Spanning All Columns</td>
+         </tr>
+      </table>
+   </body>
+</html></p>`,
+        6: `<p><!DOCTYPE html>
+<html>
+
+   <head>
+      <title>HTML Table Width/Height</title>
+   </head>
+   
+   <body>
+      <table border="1" width="400" height="150">
+         <tr>
+            <td>First Row, First Column</td>
+            <td>First Row, Second Column</td>
+         </tr>
+         
+         <tr>
+            <td>Second Row, First Column</td>
+            <td>Second Row, Second Column</td>
+         </tr>
+      </table>
+   </body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>HTML Table Background</title>
+   </head>
+   <body>
+      <table border="1" bordercolor="blue" bgcolor="lightgrey">
+         <tr>
+            <th>Column A</th>
+            <th>Column B</th>
+            <th>Column C</th>
+         </tr>
+         <tr>
+            <td rowspan="2">First Row, First Cell</td>
+            <td>First Row, Second Cell</td>
+            <td>First Row, Third Cell</td>
+         </tr>
+         <tr>
+            <td>Second Row, Second Cell</td>
+            <td>Second Row, Third Cell</td>
+         </tr>
+         <tr>
+            <td colspan="3">Third Row, Single Cell Spanning All Columns</td>
+         </tr>
+      </table>
+   </body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>HTML Table Background</title>
+   </head>
+   <body>
+      <table border="1" bordercolor="blue" background="background-image.jpg">
+         <tr>
+            <th>First Column</th>
+            <th>Second Column</th>
+            <th>Third Column</th>
+         </tr>
+         <tr>
+            <td rowspan="2">First Row, First Cell</td>
+            <td>First Row, Second Cell</td><td>First Row, Third Cell</td>
+         </tr>
+         <tr>
+            <td>Second Row, Second Cell</td>
+            <td>Second Row, Third Cell</td>
+         </tr>
+         <tr>
+            <td colspan="3">Third Row, Full Width Cell</td>
+         </tr>
+      </table>
+   </body>
+</html></p>`,
+        7: `<p><!DOCTYPE html>
+<html>
+   <head>
+      <title>Div Tag Example</title>
+   </head>
+   <body>
+      <div id = "menu" align = "middle" >
+         <a href = "/home.htm">HOME</a> | 
+         <a href = "/about/contact_us.htm">CONTACT</a> | 
+         <a href = "/about/index.htm">ABOUT</a>
+      </div>
+      <div id = "content" align = "left">
+         <h5>Content Articles</h5>
+         <p>Actual content goes here.....</p>
+      </div>
+   </body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Span Tag Example</title>
+   </head>
+   <body>
+      <p>Learn how to use the <span style="color:green">span element</span> to style parts of text and the <span style="color:red">div element</span> for larger content blocks.</p>
+   </body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Text Input Control</title>
+   </head>
+   <body>
+      <form>
+         Enter your First Name: <input type="text" name="first_name" />
+         <br>
+         Enter your Last Name: <input type="text" name="last_name" />
+      </form>
+   </body>
+</html></p>`,
+        8: `<p><!DOCTYPE html>
+<html>
+<head>
+<style>
+#para1 {text-align: center; color: red;}
+</style>
+</head>
+<body>
+
+<p id="para1">Welcome to my styled CSS page!</p>
+<p>This text remains unstyled by the CSS rule above.</p>
+
+</body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.center {
+    text-align: center;
+    color: red;
+}
+</style>
+</head>
+<body>
+
+<h1 class="center">Welcome to My Web Page</h1>
+<p class="center">This is a centered and red-colored message.</p> 
+
+</body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+p.center {
+    text-align: center;
+    color: red;
+}
+</style>
+</head>
+<body>
+
+<h1 class="center">Welcome to Styling with CSS</h1>
+<p class="center">This text is styled using a class for paragraphs.</p> 
+
+</body>
+</html>
+
+<br>
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+p.center {
+    text-align: center;
+    color: red;
+}
+p.large {
+    font-size: 300%;
+}
+</style>
+</head>
+<body>
+
+<h1 class="center">CSS Styling Demonstration</h1>
+<p class="center">This line is centered and red.</p>
+<p class="center large">This text is larger, red, and center-aligned.</p> 
+
+</body>
+</html></p>`,
+        9: `<p><!DOCTYPE html>
+<html>
+   <head>
+      <title>BIRTHDAY CALENDAR</title>
+   </head>
+   
+   <body>
+      <table border = "1" width = "650" height = "300"  bordercolor = "green" background = "hand.jpg"><br><br>
+	   <tr>
+            <td>MAY 2005, YEAR OF THE ROASTER </td>
+             
+         </tr>
+         <tr>
+            <td  >SUNDAY </td>
+             <td  >MONDAY </td>
+			  <td >TUESDAY </td>
+			   <td >WEDNESDAY </td>
+			    <td >THURSDAY </td>
+			     <td  >FRIDAY </td>
+				  <td  >SATURDAY </td>
+         </tr>
+         <tr>
+            <td></td>
+            <td></td>
+		     <td>1</td>
+			 <td>2</td>
+		   <td>3</td>
+		   <td>4</td>
+           <td>5</td>
+         </tr>
+		  <tr>
+            <td>6</td>
+            <td>7</td>
+		     <td>8</td>
+			 <td>9</td>
+		   <td>10</td>
+		   <td>11</td>
+           <td>12</td>
+         </tr>
+		  <tr>
+            <td>13</td>
+            <td>14</td>
+		     <td>15</td>
+			 <td>16</td>
+		   <td>17</td>
+		   <td>18</td>
+           <td>19</td>
+         </tr>
+		  <tr>
+            <td>20</td>
+            <td>21</td>
+		     <td>22</td>
+			 <td>23</td>
+		   <td>24</td>
+		   <td>25</td>
+           <td>26</td>
+         </tr>
+		 <tr>
+            <td>27</td>
+            <td>28</td>
+		     <td>29</td>
+			 <td>30</td>
+		   <td>31</td>
+		   <td></td>
+           <td></td>
+         </tr>
+      </table>
+   </body>
+</html>
+</p>`,
+        10: `<p><!DOCTYPE html>
+<html>
+   <head>
+      <title>Div Tag Example</title>
+      <style>
+         body {
+            background-color: pink;
+            font-family: 'Oliver', sans-serif;
+            font-size: 14px;
+         }
+         h5 {
+            font-size: 16px;
+         }
+         #menu {
+            text-align: center;
+            font-size: 18px;
+         }
+         #content {
+            text-align: center;
+         }
+         a {
+            text-decoration: none;
+            color: black;
+         }
+         a:hover {
+            color: blue;
+      </style>
+   </head>
+   
+</html>
+
+      </style>
+   </head>
+   <body>
+      <div id="menu">
+         <a href="/home.htm">HOME</a> | 
+         <a href="/about/contact_us.htm">CONTACT</a> | 
+         <a href="/about/index.htm">ABOUT</a>
+      </div>
+      <div id="content">
+         <h5>AU ID Registration Form</h5>
+         <p>FILL OUT THE FORM</p>
+      </div>
+   </body>
+</html>
+
+<html>
+   <head>
+      <title>Text Input Control</title>
+   </head>
+   <body>
+   <div id = "content" align = "center">
+      <form >
+         First name: <input type = "text" name = "first_name" />
+         <br>
+         Last name: <input type = "text" name = "last_name" />
+      </form>
+   </body>
+</html>
+
+
+<html>
+   <head>
+      <title>Text Input Control</title>
+   </head>
+	
+   <body>
+      <form>
+         Email: <input type="text" name="Email" />
+         <br>
+         Address: <input type="text" name="address" />
+      </form>
+      <form>
+         Contact: <input type="text" name="CONTACT" />
+         <br>
+         Guardian Name: <input type="text" name="guardian_name" />
+      </form>
+   </body>
+</html>
+
+<html>
+
+   <head>
+      <title>Multiple-Line Input Control</title>
+   </head>
+	
+   <body>
+      <form>
+         Description : <br />
+         <textarea rows = "5" cols = "60" name = "description">
+            
+         </textarea>
+      </form>
+   </body>
+</html>
+
+
+
+<html>
+   <head>
+      <title>Checkbox Control</title>
+   </head>
+   <body>
+      <form>
+         <input type = "checkbox" name = "Male" value = "on"> Male
+         <input type = "checkbox" name = "Female" value = "on"> Female
+      </form>
+   </body>
+</html>
+
+
+<html>
+
+   <head>
+      <title>dropdown</title>
+   </head>
+
+   <body>
+      <form>
+      
+      
+		 <input type = "radio" name = "subject" value = "1ST YEAR"> 1ST YEAR
+         <input type = "radio" name = "subject" value = "2ND YEAR"> 2ND YEAR 
+		 <input type = "radio" name = "subject" value = "3RD YEAR "> 3RD YEAR
+         <input type = "radio" name = "subject" value = "4TH YEAR"> 4TH YEAR
+      </form>
+   </body>
+</html>
+
+<html>
+   <head>
+      <title>Course</title>
+   </head>
+	
+   <body>
+      <form>
+         <select name = "dropdown">
+		  <option value = "Course" selected>Course</option
+		  
+            <option value = "NURSING">NURSING</option>
+			 <option value = "TOURISM">TOURISM</option>
+            <option value = "EDUCATION">EDUCATION</option>
+			 <option value = "CRIMINOLOGY">CRIMINOLOGY</option>
+			  <option value = "INFORMATION TECHNOLOGY">INFORMATION TECHNOLOGY</option>
+            <option value = "NURSING">NURSING</option>
+			 
+           
+           
+			
+         </select>
+      </form>
+   </body>
+</html>
+
+<html>
+
+   <head>
+      <title>File Upload Box</title>
+   </head>
+
+   <body>
+      <form>
+         <input type = "file" name = "fileupload" accept = "image/*" />
+      </form>
+   </body>
+</html>
+
+<html>
+
+   <head>
+      <title>File Upload Box</title>
+   </head>
+	
+   <body>
+	<form>
+		<input type = "submit" name = "SUBMIT" value = "SUBMIT" />
+         	<input type = "reset" name = "RESET"  value = "RESET" />
+         	<input type = "button" name = "BACK" value = "BACK" />
+         	<input type = "image" name = "imagebutton" src = "button.png" />
+	</form>
+
+   </body>
+</html></p>`
+      };
+
+      document.getElementById('level-content').innerHTML = levelContent[level] || '<p>No content for this level.</p>';
+    }
+
+    function goBack() {
+      showLevels();
+    }
+  </script>
+</body>
+</html>
